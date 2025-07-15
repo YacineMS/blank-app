@@ -43,6 +43,7 @@ if option == "Keras - ResNet50V2":
                 Keras est une bibliothèque open source de réseaux de neurones écrite en Python. Avec un haut niveau
                 d\'abstraction, sa simplicité et sa modularité, elle est  l\’une des APIs de réseaux de neurones les plus utilisées.
                 ''')
+        
     with col2:
         st.subheader('ResNet50V2')
         st.write('''
@@ -53,6 +54,52 @@ if option == "Keras - ResNet50V2":
     st.subheader('Architecture')
     st.image('/workspaces/blank-app/ressources/model_architecture/Architectural-diagram-of-ResNet50v2.jpg', caption='Architecture ResNet50V2')
     
+    col3, col4 = st.columns(2)
+    with col3 :
+        st.subheader("Entrainement")
+        resnet_finetuning = st.checkbox("Afficher les résultats après Fine tuning")
+        if resnet_finetuning:
+            st.image('/workspaces/blank-app/ressources/model_resultat/resultat_keras_finetuning.png', caption='Résultat du transfer learning Keras')
+        else:
+            st.image('/workspaces/blank-app/ressources/model_resultat/resulat_keras_transfer_learning.png', caption='Résultat du transfer learning Keras')
+
+    with col4 :
+        st.subheader("Commentaires :")
+        st.write('''
+                    L'entraînement a été effectué 55 classes qui résultent du croisement espèce et maladie.
+                    Pour chaque modèle nous avons effectué un entraînement en transfert learning sur 10 époques avec les couches du modèle freezées. 
+                    Nous avons effectué du fine tuning des modèles entraînés sur 30 époques avec les 30 dernières couches non freezées.
+                 
+                    Le modèle ResNet50V2 atteint une accuracy de 92% et une loss de 0.25%, notamment à cause de la classe cassava.
+
+                    Après Finetuning, le modèle atteint une accuracy de 95% et une loss de 0.17%.
+                ''')
+    st.subheader("Optimisation")
+    st.write('''
+                Nos modèles ont été optimisé par : 
+                1) Des corrections d’erreur,
+                2) Des “élagages” rapides de modèles jugés non pertinents ;
+                3) L’utilisation de techniques de fine-tuning : choix des “optimizers”, gel/dégel de couches des modèles pour l’apprentissage, technique d’augmentation de data, ajustement des learning rates et introduction de scheduler, modification des fonctions de “loss”, techniques de callback, application de poids aux classes pour corriger les déséquilibres ;
+                4) Des ajustements techniques pour un apprentissage plus rapide : réorganisation du code ; 
+                5) Des choix réalisés pour le traitement de la classe Cassava
+                ''')
+    col5, col6 = st.columns(2)
+    with col5 :
+        st.subheader("Résultats")
+        st.image('/workspaces/blank-app/ressources/model_resultat/resultat_keras_finetuning.png', caption='Résultat du transfer learning Keras')
+
+    with col6 :
+        st.subheader("Commentaires :")
+        st.write('''
+                    L'entraînement a été effectué 55 classes qui résultent du croisement espèce et maladie.
+                    Pour chaque modèle nous avons effectué un entraînement en transfert learning sur 10 époques avec les couches du modèle freezées. 
+                    Nous avons effectué du fine tuning des modèles entraînés sur 30 époques avec les 30 dernières couches non freezées.
+                 
+                    Le modèle ResNet50V2 atteint une accuracy de 92% et une loss de 0.25%, notamment à cause de la classe cassava.
+
+                    Après Finetuning, le modèle atteint une accuracy de 95% et une loss de 0.17%.
+                ''')
+        
 elif option == "Keras - EfficientNetB0":
     col1, col2 = st.columns(2)
     with col1 :
