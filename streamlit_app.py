@@ -3,12 +3,30 @@ import streamlit as st
 st.title(
     "Modelisation"
 )
+
 st.subheader("Type de problématique")
-st.write("La cible du projet est d’offrir à un individu, \
-    ne bénéficiant pas de l’expertise pour reconnaître une plante et sa maladie éventuelle,  \
-    la capacité de l’identifier via l’appareil photo de son smartphone.  \
-    Il s’agit donc d’un problème de classification des espèces ainsi que des maladies  \
-    associées sur la base des images qui seront soumises par l’utilisateur. ")
+st.write('''
+        La cible du projet est d’offrir à un individu,
+        ne bénéficiant pas de l’expertise pour reconnaître une plante et sa maladie éventuelle,  
+        la capacité de l’identifier via l’appareil photo de son smartphone.  
+        Il s’agit donc d’un problème de classification des espèces ainsi que des maladies  
+        associées sur la base des images qui seront soumises par l’utilisateur. 
+    ''')
+
+col1, col2 = st.columns(2)
+with col1 :
+    st.subheader("Métrique principale")
+    st.write('''
+            Accuracy : Compte tenu de la limitation du déséquilibre entre classes obtenu après la phase de pre-processing,
+            nous avons choisi de retenir l’Accuracy comme métrique principale, 
+            définie comme le rapport entre le nombre de bonnes prédictions et le nombre total de prédictions.
+        ''')
+with col2:
+    st.subheader("Métrique secondaires")
+    st.write('''
+            Loss : Nous avons également jaugé la rapidité de la convergence du modèle 
+            en suivant la notion de loss à chaque époque de l’apprentissage.
+        ''')
 
 option = st.selectbox(
     "Selectionnez un model :",
@@ -32,6 +50,9 @@ if option == "Keras - ResNet50V2":
                 conçue pour la vision par ordinateur. Il utilise des blocs résiduels, qui permettent de mieux entraîner des réseaux profonds 
                 en atténuant le problème de dégradation de la performance
                 ''')
+    st.subheader('Architecture')
+    st.image('/workspaces/blank-app/ressources/model_architecture/Architectural-diagram-of-ResNet50v2.jpg', caption='Architecture ResNet50V2')
+    
 elif option == "Keras - EfficientNetB0":
     col1, col2 = st.columns(2)
     with col1 :
@@ -48,6 +69,8 @@ elif option == "Keras - EfficientNetB0":
                 Il est le plus petit des modèles de la famille EfficientNet, ce qui le rend pertinent pour 
                 son utilisation sur du matériel avec des ressources limitées (smartphone, tablette).
             ''')
+    st.subheader('Architecture')
+    st.image('/workspaces/blank-app/ressources/model_architecture/EfficientNet-B0.png', caption='Architecture EfficientNetB0')
     
 elif option == "Keras - EfficientNetV2M":
     col1, col2 = st.columns(2)
@@ -63,7 +86,9 @@ elif option == "Keras - EfficientNetV2M":
                     Une amélioration de l'EfficientNet original, qui intègre des techniques de fusion des convolutions et un meilleur équilibrage des ressources.
                     Plus complexe et plus profond qu'EfficientNetB0, il est très performant sur des tâches complexes et des jeux de données volumineux.
                 ''')
-
+    st.subheader('Architecture')
+    st.image('/workspaces/blank-app/ressources/model_architecture/EfficientNetV2m.png', caption='Architecture EfficientNetV2M')
+    
 elif option == "FastAI  - EfficientNetB0":
     col1, col2 = st.columns(2)
     with col1 :
@@ -81,7 +106,7 @@ elif option == "FastAI  - EfficientNetB0":
                     son utilisation sur du matériel avec des ressources limitées (smartphone, tablette).
                 ''')  
     st.subheader('Architecture')
-     
+    st.image('/workspaces/blank-app/ressources/model_architecture/EfficientNet-B0.png', caption='Architecture EfficientNetB0')
 elif option == "Tensorflow  - VGG16":
     col1, col2 = st.columns(2)
     with col1 :
@@ -97,6 +122,9 @@ elif option == "Tensorflow  - VGG16":
                     VGG16 est une architecture de réseau de neurones convolutifs (CNN), devenue populaire par sa simplicité et son utilisation de convolutions 3x3, 
                     ce qui en fait l'une des architectures les plus influentes dans le domaine de la vision par ordinateur.
                 ''')
+    st.subheader('Architecture')
+    st.image('/workspaces/blank-app/ressources/model_architecture/vgg16.png', caption='Architecture VGG16')
+    
 elif option == "Torch - MobileNetV2":
     col1, col2 = st.columns(2)
     with col1 :
@@ -112,6 +140,9 @@ elif option == "Torch - MobileNetV2":
                     MobileNetV2 possède une architecture légère et efficace, composé de blocs inversés résiduels
                     qui permettent de réduire considérablement le nombre de paramètres et les opérations nécessaires, tout en maintenant une bonne précision.
                 ''')
+    st.subheader('Architecture')
+    st.image('/workspaces/blank-app/ressources/model_architecture/MobileNetV2.png', caption='Architecture MobileNetV2', width=500)
+    
 elif option == "AlexNet":
     col1, col2 = st.columns(2)
     with col1 : 
