@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 st.title(
     "Modelisation"
@@ -53,53 +54,62 @@ if option == "Keras - ResNet50V2":
                 ''')
     st.subheader('Architecture')
     st.image('/workspaces/blank-app/ressources/model_architecture/Architectural-diagram-of-ResNet50v2.jpg', caption='Architecture ResNet50V2')
-    
-    col3, col4 = st.columns(2)
+  
+    st.subheader("Entrainement")
+    data = {
+        "Description": [
+            "Nombre de classes",
+            "Entraînement initial",
+            "Fine-tuning",
+            "Performance initiale",
+            "Problème identifié",
+            "Performance après Fine-tuning"
+        ],
+        "": [
+            "55 (résultant du croisement espèce et maladie)",
+            "Transfert learning sur 10 époques avec les couches du modèle freezées",
+            "30 époques avec les 30 dernières couches non freezées",
+            "Accuracy : 92%, Loss : 0.25",
+            "Performance affectée par la classe cassava",
+            "Accuracy : 95%, Loss : 0.17"
+        ]
+    }
+
+    # Création du DataFrame
+    df = pd.DataFrame(data)
+    st.dataframe(df, hide_index=True, width=1000)
+    col3, col4 = st.columns(2,gap="large")
     with col3 :
-        st.subheader("Entrainement")
-        resnet_finetuning = st.checkbox("Afficher les résultats après Fine tuning")
-        if resnet_finetuning:
-            st.image('/workspaces/blank-app/ressources/model_resultat/resultat_keras_finetuning.png', caption='Résultat du transfer learning Keras')
-        else:
-            st.image('/workspaces/blank-app/ressources/model_resultat/resulat_keras_transfer_learning.png', caption='Résultat du transfer learning Keras')
+        st.image('/workspaces/blank-app/ressources/model_resultat/resultat_keras_finetuning.png',use_container_width=True, caption='Résultat du transfer learning Keras')
+    with col4:
+        st.image('/workspaces/blank-app/ressources/model_resultat/resulat_keras_transfer_learning.png',use_container_width=True, caption='Résultat du transfer learning Keras + finetuning')
 
-    with col4 :
-        st.subheader("Commentaires :")
-        st.write('''
-                    L'entraînement a été effectué 55 classes qui résultent du croisement espèce et maladie.
-                    Pour chaque modèle nous avons effectué un entraînement en transfert learning sur 10 époques avec les couches du modèle freezées. 
-                    Nous avons effectué du fine tuning des modèles entraînés sur 30 époques avec les 30 dernières couches non freezées.
-                 
-                    Le modèle ResNet50V2 atteint une accuracy de 92% et une loss de 0.25%, notamment à cause de la classe cassava.
-
-                    Après Finetuning, le modèle atteint une accuracy de 95% et une loss de 0.17%.
-                ''')
     st.subheader("Optimisation")
     st.write('''
-                Nos modèles ont été optimisé par : 
-                1) Des corrections d’erreur,
-                2) Des “élagages” rapides de modèles jugés non pertinents ;
-                3) L’utilisation de techniques de fine-tuning : choix des “optimizers”, gel/dégel de couches des modèles pour l’apprentissage, technique d’augmentation de data, ajustement des learning rates et introduction de scheduler, modification des fonctions de “loss”, techniques de callback, application de poids aux classes pour corriger les déséquilibres ;
-                4) Des ajustements techniques pour un apprentissage plus rapide : réorganisation du code ; 
-                5) Des choix réalisés pour le traitement de la classe Cassava
-                ''')
-    col5, col6 = st.columns(2)
-    with col5 :
-        st.subheader("Résultats")
-        st.image('/workspaces/blank-app/ressources/model_resultat/resultat_keras_finetuning.png', caption='Résultat du transfer learning Keras')
+            Configuration
+             
+                Optimiseur : AdamW
+                Scheduler de Learning Rate : CosineDecayRestarts
+                Perte : SparseFocalLoss (avec poids des classes)
+                Callbacks : earlystop, time_callback, printLR, model_checkpoint_callback
+                Détails supplémentaires : 20 epochs max de finetuning, Augmentation manuelle des images des classes minoritaires sur Cassava + augmentation ciblée sur ces classes
+            ''')
 
-    with col6 :
-        st.subheader("Commentaires :")
-        st.write('''
-                    L'entraînement a été effectué 55 classes qui résultent du croisement espèce et maladie.
-                    Pour chaque modèle nous avons effectué un entraînement en transfert learning sur 10 époques avec les couches du modèle freezées. 
-                    Nous avons effectué du fine tuning des modèles entraînés sur 30 époques avec les 30 dernières couches non freezées.
-                 
-                    Le modèle ResNet50V2 atteint une accuracy de 92% et une loss de 0.25%, notamment à cause de la classe cassava.
+    st.subheader("Résultats")
+    st.image('/workspaces/blank-app/ressources/model_resultat/optimisation_keras.png', caption='Résultat des optimisations Keras')
+    st.subheader("Observations :")
+    st.write("Bons résultats globaux, mais performance moyenne sur les classes Cassava")
+    data = {
+        "Modèle": ["ResNet50V2"],
+        "Accuracy": [0.96],
+        "Macro F1-score": [0.96],
+        "Weighted F1": [0.96]
+    }
 
-                    Après Finetuning, le modèle atteint une accuracy de 95% et une loss de 0.17%.
-                ''')
-        
+    # Création du DataFrame
+    df = pd.DataFrame(data)
+    st.dataframe(df, hide_index=True, width=1000)
+    
 elif option == "Keras - EfficientNetB0":
     col1, col2 = st.columns(2)
     with col1 :
@@ -119,6 +129,40 @@ elif option == "Keras - EfficientNetB0":
     st.subheader('Architecture')
     st.image('/workspaces/blank-app/ressources/model_architecture/EfficientNet-B0.png', caption='Architecture EfficientNetB0')
     
+    st.subheader("Entrainement")
+    data = {
+        "Description": [
+            "Nombre de classes",
+            "Entraînement initial",
+            "Fine-tuning",
+            "Performance initiale",
+            "Problème identifié",
+            "Performance après Fine-tuning"
+        ],
+        "": [
+            "55 (résultant du croisement espèce et maladie)",
+            "Transfert learning sur 10 époques avec les couches du modèle freezées",
+            "30 époques avec les 30 dernières couches non freezées",
+            "Accuracy : 92%, Loss : 0.22",
+            "Performance affectée par la classe cassava",
+            "Accuracy : 96%, Loss : 0.14"
+        ]
+    }
+
+    # Création du DataFrame
+    df = pd.DataFrame(data)
+    st.dataframe(df, hide_index=True, width=1000)
+    col3, col4 = st.columns(2,gap="large")
+    with col3 :
+        st.image('/workspaces/blank-app/ressources/model_resultat/resulat_keras_transfer_learning.png',use_container_width=True, caption='Résultat du transfer learning Keras')
+    with col4:
+        st.image('/workspaces/blank-app/ressources/model_resultat/resultat_keras_finetuning.png',use_container_width=True, caption='Résultat du transfer learning Keras + finetuning')
+
+    st.subheader("Optimisation")
+    st.write('''
+                Ce modèle n'a pas été optimisé.
+            ''')
+    
 elif option == "Keras - EfficientNetV2M":
     col1, col2 = st.columns(2)
     with col1 :
@@ -136,6 +180,60 @@ elif option == "Keras - EfficientNetV2M":
     st.subheader('Architecture')
     st.image('/workspaces/blank-app/ressources/model_architecture/EfficientNetV2m.png', caption='Architecture EfficientNetV2M')
     
+    st.subheader("Entrainement")
+    data = {
+        "Description": [
+            "Nombre de classes",
+            "Entraînement initial",
+            "Fine-tuning",
+            "Performance initiale",
+            "Problème identifié",
+            "Performance après Fine-tuning"
+        ],
+        "": [
+            "55 (résultant du croisement espèce et maladie)",
+            "Transfert learning sur 10 époques avec les couches du modèle freezées",
+            "30 époques avec les 30 dernières couches non freezées",
+            "Accuracy : 91%, Loss : 0.27",
+            "Performance affectée par la classe cassava",
+            "Accuracy : 95%, Loss : 0.16"
+        ]
+    }
+
+    # Création du DataFrame
+    df = pd.DataFrame(data)
+    st.dataframe(df, hide_index=True, width=1000)
+    col3, col4 = st.columns(2,gap="large")
+    with col3 :
+        st.image('/workspaces/blank-app/ressources/model_resultat/resultat_keras_finetuning.png',use_container_width=True, caption='Résultat du transfer learning Keras')
+    with col4:
+        st.image('/workspaces/blank-app/ressources/model_resultat/resulat_keras_transfer_learning.png',use_container_width=True, caption='Résultat du transfer learning Keras + finetuning')
+
+    st.subheader("Optimisation")
+    st.write('''
+            Configuration
+             
+                Optimiseur : AdamW
+                Scheduler de Learning Rate : CosineDecayRestarts
+                Perte : SparseFocalLoss (avec poids des classes)
+                Callbacks : earlystop, time_callback, printLR, model_checkpoint_callback
+                Détails supplémentaires : 20 epochs max de finetuning, Augmentation manuelle des images des classes minoritaires sur Cassava + augmentation ciblée sur ces classes
+            ''')
+
+    st.subheader("Résultats")
+    st.image('/workspaces/blank-app/ressources/model_resultat/optimisation_keras.png', caption='Résultat des optimisations Keras')
+    st.subheader("Observations :")
+    st.write("Meilleure performance globale, bonne gestion des classes déséquilibrées comme Cassava.")
+    data = {
+        "Modèle": ["EfficientNetV2M"],
+        "Accuracy": [0.99],
+        "Macro F1-score": [0.98],
+        "Weighted F1": [0.99]
+    }
+
+    # Création du DataFrame
+    df = pd.DataFrame(data)
+    st.dataframe(df, hide_index=True, width=1000)
 elif option == "FastAI  - EfficientNetB0":
     col1, col2 = st.columns(2)
     with col1 :
@@ -154,6 +252,58 @@ elif option == "FastAI  - EfficientNetB0":
                 ''')  
     st.subheader('Architecture')
     st.image('/workspaces/blank-app/ressources/model_architecture/EfficientNet-B0.png', caption='Architecture EfficientNetB0')
+
+    st.subheader("Entrainement")
+    data = {
+        "Description": [
+            "Modification du dataset",
+            "Nombre de classes",
+            "Entraînement",
+            "Performance"
+        ],
+        "": [
+            "Retrait des classes cassava.",
+            "50 (résultant du croisement espèce et maladie)",
+            "Transfert learning sur 5 époques avec les couches du modèle freezées",
+            "Accuracy : 95%, Loss : 0.12"
+        ]
+    }
+
+    # Création du DataFrame
+    df = pd.DataFrame(data)
+    st.dataframe(df, hide_index=True, width=1000)
+    st.image('/workspaces/blank-app/ressources/model_resultat/performance_efficienetb0_fastai.png',use_container_width=True, caption='Résultat du transfer learning Keras')
+ 
+    st.subheader("Optimisation")
+    st.write('''
+        ● Organisation du code pour améliorer le temps d’apprentissage\n 
+        ● Augmentation de la data (Rotation, Renversement, Contraste, Luminosité, Translation et Zoom)\n
+        ● Ajouts des poids sur les classes pour lutter contre le déséquilibre\n
+        ● Gel/Dégel du modèle de base        
+    ''')
+
+    st.subheader("Résultats")
+    st.image('/workspaces/blank-app/ressources/model_resultat/optimisation_efficientNetb0.png', caption='Résultat optimisations EfficientNetB0')
+    st.subheader("Observations :")
+    st.write('''
+        Bien que dans l’apprentissage du modèle, les classes “Cassava” aient été exclues, 
+        on note que certaines classes de tomates sont moins bien prédites que la moyenne. 
+        Par exemple celles atteintes des maladies “Mosaic Virus” et “Spider Mites” (Précision : 73%, Recall : 98%, F1-Score : 84%).
+        On constate qu’à l’oeil nu la résolution de certaines images ne permet pas de détecter la différence entre ces maladies.
+    ''')
+    data = {
+        "Metric": ["Precision", "Recall", "F1 Score"],
+        "Micro": [0.96, 0.96, 0.96],
+        "Macro": [0.94, 0.94, 0.94],
+        "Weighted": [0.96, 0.96, 0.96]
+    }
+
+    # Création du DataFrame
+    df = pd.DataFrame(data)
+    st.dataframe(df, hide_index=True, width=1000)
+    
+    st.image('/workspaces/blank-app/ressources/model_resultat/maladie_spidermites_mosaicvirus.png', caption='Maladie Mosaic Virus et Spider Mites')
+
 elif option == "Tensorflow  - VGG16":
     col1, col2 = st.columns(2)
     with col1 :
@@ -172,6 +322,52 @@ elif option == "Tensorflow  - VGG16":
     st.subheader('Architecture')
     st.image('/workspaces/blank-app/ressources/model_architecture/vgg16.png', caption='Architecture VGG16')
     
+    st.subheader("Entrainement")
+    data = {
+        "Description": [
+            "Modification du dataset",
+            "Nombre de classes",
+            "Entraînement",
+            "Performance"
+        ],
+        "": [
+            "Retrait des classes cassava.",
+            "50 (résultant du croisement espèce et maladie)",
+            "Transfert learning sur 5 époques avec les couches du modèle freezées",
+            "Accuracy : 90%, Loss : 0.32"
+        ]
+    }
+
+    # Création du DataFrame
+    df = pd.DataFrame(data)
+    st.dataframe(df, hide_index=True, width=1000)
+    st.image('/workspaces/blank-app/ressources/model_resultat/transfertlearning_vgg16.png',use_container_width=True, caption='Résultat du transfer learning Keras')
+ 
+    st.subheader("Optimisation")
+    st.write('''
+        ● Organisation du code pour améliorer le temps d’apprentissage\n 
+        ● Augmentation de la data (Rotation, Renversement, Contraste, Luminosité, Translation et Zoom)\n
+        ● Ajouts des poids sur les classes pour lutter contre le déséquilibre\n
+        ● Gel/Dégel du modèle de base        
+    ''')
+
+    st.subheader("Résultats")
+    st.image('/workspaces/blank-app/ressources/model_resultat/finetuning_vgg16.png', caption='Résultat optimisations EfficientNetB0')
+    st.subheader("Observations :")
+    st.write('''
+        
+    ''')
+    data = {
+        "Metric": ["Precision", "Recall", "F1 Score"],
+        "Micro": [0.97, 0.97, 0.97],
+        "Macro": [0.96, 0.95, 0.95],
+        "Weighted": [0.97, 0.97, 0.97]
+    }
+
+    # Création du DataFrame
+    df = pd.DataFrame(data)
+    st.dataframe(df, hide_index=True, width=1000)
+    
 elif option == "Torch - MobileNetV2":
     col1, col2 = st.columns(2)
     with col1 :
@@ -189,7 +385,16 @@ elif option == "Torch - MobileNetV2":
                 ''')
     st.subheader('Architecture')
     st.image('/workspaces/blank-app/ressources/model_architecture/MobileNetV2.png', caption='Architecture MobileNetV2', width=500)
-    
+    col5, col6 = st.columns(2)
+    with col5 :
+        st.subheader("Résultats")
+        st.image('/workspaces/blank-app/ressources/model_resultat/resultat_keras_finetuning.png', caption='Résultat du transfer learning Keras')
+
+    with col6 :
+        st.subheader("Commentaires :")
+        st.write('''
+                        
+        ''')
 elif option == "AlexNet":
     col1, col2 = st.columns(2)
     with col1 : 
